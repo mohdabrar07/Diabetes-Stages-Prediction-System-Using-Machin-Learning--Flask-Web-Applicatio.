@@ -1,0 +1,2 @@
+# Diabetes-Stages-Prediction-System-Using-Machin-Learning--Flask-Web-Applicatio.
+This is our Major Project for 8th sem, "Diabetes Stages Prediction System Using Machin Learning"- a Flask based Web Application, used to predict the different stages of diabetes using parameters like age, bmi, glucose level, insulin level, Blood pressure,etc, It also recommends the diet based on the different stages predicted.
