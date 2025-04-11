@@ -1,0 +1,17 @@
+<!-- templates/error.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error</title>
+</head>
+<body>
+    <h1>Error {{ error['code'] }}</h1>
+    <p>{{ error['message'] }}</p>
+    <ul>
+        {% for detail in error['details'] %}
+            <li>{{ detail }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

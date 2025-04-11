@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Results</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto">
+            <!-- Header -->
+            <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">
+                Diabetes Risk Assessment Results
+            </h1>
+            
+            <!-- Main Results Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <!-- Primary Risk Assessment -->
+                <div class="text-center mb-8 p-6 rounded-lg 
+                    {% if result.prediction.risk_level == 'Early Stage' %}bg-green-50
+                    {% elif result.prediction.risk_level == 'Prediabetes' %}bg-yellow-50
+                    {% elif result.prediction.risk_level == 'Diabetes' %}bg-orange-50
+                    {% else %}bg-red-50{% endif %}">
+
+                    <h2 class="text-2xl font-bold mb-3">
+                        {{ result.prediction.stage }}
+                    </h2>
+                    <div class="text-xl mb-2">
+                        Risk Level: 
+                        <span class="font-bold 
+                            {% if result.prediction.risk_level == 'Early Stage' %}text-green-600
+                            {% elif result.prediction.risk_level == 'Prediabetes' %}text-yellow-600
+                            {% elif result.prediction.risk_level == 'Diabetes' %}text-orange-600
+                            {% else %}text-red-600{% endif %}">
+                            {{ result.prediction.risk_level }}
+                        </span>
+                    </div>
+                    <div class="text-lg">
+                        Risk Percentage: 
+                        <span class="font-semibold">{{ result.prediction.risk_percentage }}%</span>
+                    </div>
+                </div>
+
+                <!-- Risk Factors Section -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Key Risk Factors</h3>
+                    <div class="grid gap-4">
+                        {% for factor in result.risk_factors[:3] %}
+                        <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium text-gray-700">{{ factor.feature }}</span>
+                                <span class="text-gray-600">Value: {{ "%.2f"|format(factor.value) }}</span>
+                            </div>
+                            <div class="mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ (factor.importance * 100)|round|int }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Model Confidence Section -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Model Confidence Metrics</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="text-sm text-gray-600 mb-1">Cross-validation Score</div>
+                            <div class="text-2xl font-bold text-gray-800">
+                                {{ result.model_confidence.cross_validation_score }}%
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                            <div class="text-sm text-gray-600 mb-1">Prediction Probability</div>
+                            <div class="text-2xl font-bold text-gray-800">
+                                {{ result.model_confidence.prediction_probability }}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations Section -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Recommendations</h3>
+                    <div class="p-4 rounded-lg bg-blue-50 border border-blue-200">
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            {% if result.prediction.risk_level == 'Early Stage' %}
+                                <li>Continue maintaining your healthy lifestyle</li>
+                                <li>Regular check-ups recommended</li>
+                                <li>Monitor blood sugar levels annually</li>
+                            {% elif result.prediction.risk_level == 'Prediabetes' %}
+                                <li>Schedule a consultation with your healthcare provider</li>
+                                <li>Consider lifestyle modifications</li>
+                                <li>Monitor blood sugar levels more frequently</li>
+                            {% elif result.prediction.risk_level == 'Diabetes' %}
+                                <li>Immediate consultation with healthcare provider recommended</li>
+                                <li>Regular blood sugar monitoring essential</li>
+                                <li>Lifestyle changes may be necessary</li>
+                            {% else %}
+                                <li>Urgent medical consultation required</li>
+                                <li>Comprehensive diabetes screening recommended</li>
+                                <li>Immediate lifestyle intervention may be necessary</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-4">
+                <a href="/" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Make Another Prediction
+                </a>
+                <button onclick="window.print()" 
+                        class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Print Report
+                </button>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="mt-8 text-center text-sm text-gray-500">
+                This prediction is based on machine learning models and should not replace professional medical advice. 
+                Please consult with healthcare professionals for proper diagnosis and treatment.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
